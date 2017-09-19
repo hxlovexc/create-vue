@@ -1,0 +1,35 @@
+{
+  "name": "create-vue",
+  "version": "0.0.1",
+  "description": "快速创建vue项目工具, vue多页 vue单页脚手架",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "create-vue": "./src/main.js"
+  },
+  "keywords": [
+    "vue",
+    "create-vue",
+    "vue脚手架",
+    "vue工具",
+    "vue多页脚手架",
+    "vue单页脚手架"
+  ],
+  "author": "小缘",
+  "license": "ISC",
+  "devDependencies": {
+    "art-template": "^4.12.1",
+    "async": "^2.5.0",
+    "commander": "^2.11.0",
+    "download-git-repo": "^1.0.1",
+    "ejs": "^2.5.7",
+    "inquirer": "^3.2.3",
+    "inquirer-chalk-pipe": "^1.1.0",
+    "js-beautify": "^1.6.14",
+    "ora": "^1.3.0",
+    "user-home": "^2.0.0",
+    "fs-extra": "^4.0.2"
+  }
+}
