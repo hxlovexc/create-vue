@@ -21,7 +21,9 @@ program
   .description('创建项目')
   .action(async (fileName) => {
     // 选项
-    let options = {};
+    let options = {
+      router: false
+    };
     // 项目目录
     let projectPath = path.join(process.cwd(), fileName);
     // 组织需要过滤的文件或目录
@@ -31,7 +33,7 @@ program
       return;
     }
     try {
-      // await downloadTemplate();
+      await downloadTemplate();
 
       // 判断文件夹是否存在
       await isExistence(fileName);
@@ -83,7 +85,7 @@ program
         type: 'list',
         name: 'cssPretreatment',
         message: '请选择css预处理:',
-        choices: ['less', 'sass', 'stylus', '不使用']
+        choices: ['sass', 'less', 'stylus', '不使用']
       }));
 
       // 是否开启eslint
@@ -110,43 +112,55 @@ program
         options.stylelint = false;
       };
 
-      // 是否集成vue-router
-      try {
-        await prompt({
-          type: 'confirm',
-          message: '是否集成vue-router ?',
-          name: 'router'
-        });
-        options.router = true;
-      } catch (error) {
-        options.router = false;
-      };
+      // 单页才执行选择添加路由
+      if (options.type) {
+        // 是否集成vue-router
+        try {
+          await prompt({
+            type: 'confirm',
+            message: '是否集成vue-router ?',
+            name: 'router'
+          });
+          options.router = true;
+        } catch (error) {
+          options.router = false;
+        };
+      }
+
       // 渲染配置
       console.log('开始渲染模板...');
       await renderTemplate.render(options);
       console.log('模板渲染完成...');
       console.log('开始拷贝模板...');
+
       // 组织需要过滤的文件
       // dll
       if (options.extractingType === 'commonsChunkPlugin') filterFiles.push('webpack-dll-config.js');
+
       // eslint
       if (!options.eslint) filterFiles.push('/.eslintrc.js', '/.eslintignore');
+
       // eslint
       if (!options.stylelint) filterFiles.push('/stylelint.config.js');
-      // 单页
-      if (options.type) {
-        filterFiles.push('/views');
+
+      // 单页不添加路由
+      if (!options.router && options.type) {
+        filterFiles.push('/src/views');
+      } else if (options.type) {
+        filterFiles.push('/src/views/index');
       } else {
-        filterFiles.push('/src/index.html', '/src/main.js');
+        filterFiles.push('/src/index.html', '/src/main.js', '/src/app.vue', '/src/views/home.vue');
       };
+      
       // 路由
-      if (!options.router) filterFiles.push('/router');
+      if (!options.router) filterFiles.push('/src/router');
+      
       await copyTemplate(config.templatePath, projectPath, filterFiles);
       console.log('项目创建完成....');
       console.log(`执行以下操作进行开发:`);
-      console.log(`    cd ${fileName}`);
-      console.log(`    npm run install or yarn`);
-      console.log(`    npm run dev`);
+      console.log(`---------- cd ${fileName}  ----------`);
+      console.log(`---------- npm run install or yarn  ----------`);
+      console.log(`---------- npm run dev  ----------`);
     } catch (error) {
       console.error(error);
     }
@@ -175,7 +189,6 @@ function isExistence(name) {
   });
 }
 
-// 
 function prompt(options) {
   return new Promise((resolve, reject) => {
     inquirer.prompt(options).then((data) => {

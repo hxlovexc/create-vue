@@ -15,16 +15,18 @@ let config = {
   // 模板路径
   templatePath: path.join(userHome, templateName),
   // 模板下载地址
-  templateDownloadPath: 'hxlovexc/webpack-project-config',
+  templateDownloadPath: 'hxlovexc/create-vue-template',
   templateList: [
     'package.json',
     '/config/index.js',
     '/build/webpack-base-config.js',
     '/build/webpack-dev-config.js',
     '/build/webpack-build-config.js',
+    'src/app.vue',
     '/build/utils.js',
     '/src/main.js',
-    '/.eslintignore'
+    '/.eslintignore',
+    '/src/views/index/index.js'
   ]
 };
 
