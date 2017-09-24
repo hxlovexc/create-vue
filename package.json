@@ -1,6 +1,6 @@
 {
   "name": "create-vue",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "快速创建vue项目工具, vue多页 vue单页脚手架",
   "main": "index.js",
   "scripts": {
