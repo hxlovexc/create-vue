@@ -10,6 +10,9 @@ const rm = require('rimraf').sync;
 const pack = require('../package.json');
 const config = require('./config/index');
 const renderTemplate = require('./render');
+const { exec, cd }  = require('shelljs');
+
+console.log(123);
 
 inquirer.registerPrompt('chalk-pipe', require('inquirer-chalk-pipe'));
 
@@ -131,7 +134,7 @@ program
       console.log('开始渲染模板...');
       await renderTemplate.render(options);
       console.log('模板渲染完成...');
-      console.log('开始拷贝模板...');
+      console.log('开始拷贝模板');
 
       // 组织需要过滤的文件
       // dll
@@ -156,11 +159,13 @@ program
       if (!options.router) filterFiles.push('/src/router');
       
       await copyTemplate(config.templatePath, projectPath, filterFiles);
-      console.log('项目创建完成....');
-      console.log(`执行以下操作进行开发:`);
-      console.log(`---------- cd ${fileName}  ----------`);
-      console.log(`---------- npm run install or yarn  ----------`);
-      console.log(`---------- npm run dev  ----------`);
+      console.log('开始安装依赖包...');
+      // 执行npm install
+      cd(`./${fileName}`);
+      exec('npm install');
+      console.log('依赖安装完成');
+      console.log('开始启动服务...');
+      exec('npm run dev');
     } catch (error) {
       console.error(error);
     }
@@ -251,3 +256,17 @@ function copyTemplate (src, dest, filterFiles) {
     }
   });
 }
+
+// 命令调用
+function commandAsync (command) {
+  return new Promise((resolve, reject) => {
+    exec(command, (err, stdout, stderr) => {
+      console.log(123)
+      if (err) {
+        return reject('npm install失败, 请手执行npm install安装');
+      }
+      resolve();
+    })
+  })
+}
+
