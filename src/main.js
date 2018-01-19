@@ -12,8 +12,6 @@ const config = require('./config/index');
 const renderTemplate = require('./render');
 const { exec, cd }  = require('shelljs');
 
-console.log(123);
-
 inquirer.registerPrompt('chalk-pipe', require('inquirer-chalk-pipe'));
 
 program
